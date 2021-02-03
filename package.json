@@ -1,0 +1,17 @@
+{
+  "name": "pdf-maker",
+  "version": "1.0.0",
+  "description": "Generates PDFs from code on GitHub",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1",
+    "nunjucks": "^3.2.2",
+    "puppeteer": "^6.0.0"
+  }
+}
