@@ -2,10 +2,6 @@ const puppeteer = require('puppeteer')
 const nunjucks = require('nunjucks')
 const fetch = require('node-fetch')
 
-const env = nunjucks.configure('views', {
-  autoescape: true,
-})
-
 // captures a github url (or just the path) of a permalink file on github:
 // <optional github.com stuff>/<author>/<repo>/blob/<a commit sha>/<file path>
 // the author, repo, sha, and file path are captured
@@ -56,7 +52,9 @@ async function generatePdfBuffer(path) {
   }
 
   const code = await fetchCode(codeAttributes)
-  const codePage = env.render('code.njk', { code: code.split('\n') })
+  const codePage = nunjucks.render(require.resolve('./code.njk'), {
+    code: code.split('\n'),
+  })
   const buffer = await pdfBufferFromHtml(codePage)
 
   return buffer
