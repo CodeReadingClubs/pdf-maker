@@ -6,25 +6,22 @@ const env = nunjucks.configure('views', {
   autoescape: true,
 })
 
-// extracts info from a GitHub url:
-// /CodeReadingClubs/Resources/blob/6aad5aa8a6.../StarterKit/README.md
-// | owner          | repo    |drop| commitSha   | path
-//
-// returns null if the path doesn't match the expected pattern
+// captures a github url (or just the path) of a permalink file on github:
+// <optional github.com stuff>/<author>/<repo>/blob/<a commit sha>/<file path>
+// the author, repo, sha, and file path are captured
+const pathRegex = /^(?:(?:https?:\/\/)(?:www\.)?github\.com)?\/?([^\/]+)\/([^\/]+)\/blob\/([a-fA-F0-9]{5,40})\/(.*)\/?$/
+
+// extracts info from a GitHub file permalink using pathRegex (defined above).
+// Returns null if the path doesn't match the expected pattern
 function parsePath(path) {
-  const parts = path.slice(1).split('/')
-  if (parts.length < 5) {
+  const match = path.match(pathRegex)
+
+  if (!match) {
     return null
   }
 
-  const [owner, repo, theWordBlob, commitSha, ...codePath] = parts
-  if (theWordBlob !== 'blob') {
-    return null
-  } else if (!/^[0-9a-f]{5,40}$/.test(commitSha)) {
-    return null
-  }
-
-  return { owner, repo, commitSha, path: codePath.join('/') }
+  const [_, owner, repo, commitSha, codePath] = match
+  return { owner, repo, commitSha, path: codePath }
 }
 
 // fetches the raw (text) contents of a file on GitHub
