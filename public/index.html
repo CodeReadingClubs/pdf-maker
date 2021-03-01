@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF Maker</title>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+
+      main {
+        width: 90%;
+        max-width: 40rem;
+        margin: 5rem auto 0;
+      }
+
+      .error {
+        color: red;
+      }
+
+      form {
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+      }
+
+      form input {
+        flex-grow: 1;
+        margin-right: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>PDF Maker</h1>
+      <p>You can use this to generate PDF files of code hosted on github.</p>
+      <ol>
+        <li>Go to your desired code file on github</li>
+        <li>Hit <code>Y</code> on your keyboard. This will change the url</li>
+        <li>Paste the modified url in the field below</li>
+      </ol>
+      <form id="form">
+        <input type="text" id="input" />
+        <button id="button" type="submit">Generate PDF</button>
+      </form>
+      <p class="error" id="url-format-error" hidden>
+        This url is poorly formatted
+      </p>
+      <p class="error" id="internal-error" hidden>Something went wrong</p>
+    </main>
+    <script>
+      const form = document.getElementById('form')
+      const input = document.getElementById('input')
+      const urlFormatError = document.getElementById('url-format-error')
+      const internalError = document.getElementById('internal-error')
+
+      function download(blob, filename) {
+        const a = document.createElement('a')
+        a.href = URL.createObjectURL(blob)
+        a.setAttribute('download', filename)
+        a.click()
+        return false
+      }
+
+      form.onsubmit = (e) => {
+        e.preventDefault()
+        const url = input.value
+        internalError.hidden = true
+        if (
+          !/^(?:(?:https?:\/\/)(?:www\.)?github\.com)?\/?([^\/]+)\/([^\/]+)\/blob\/([a-fA-F0-9]{5,40})\/(.*)\/?$/.test(
+            url,
+          )
+        ) {
+          urlFormatError.hidden = false
+        } else {
+          urlFormatError.hidden = true
+          fetch(`/.netlify/functions/make-pdf?path=${url}`)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`nah`)
+              }
+              return response
+            })
+            .then((response) => response.blob())
+            .then((blob) => download(blob, 'code.pdf'))
+            .catch((err) => {
+              internalError.hidden = false
+            })
+        }
+      }
+
+      input.oninput = () => {
+        urlFormatError.hidden = true
+        internalError.hidden = true
+      }
+    </script>
+  </body>
+</html>
