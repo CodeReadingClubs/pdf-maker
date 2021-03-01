@@ -3,7 +3,6 @@ const { generatePdfBuffer } = require('./pdf-generation')
 async function handler(event) {
   try {
     const path = event.queryStringParameters.path
-    console.log(path)
     const buffer = await generatePdfBuffer(path)
 
     return {
