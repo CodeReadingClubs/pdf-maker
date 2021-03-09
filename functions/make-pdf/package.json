@@ -1,9 +1,8 @@
 {
-  "main": "node-fetch.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "dependencies": {
-    "node-fetch": "^2.6.1"
+    "chrome-aws-lambda": "^7.0.0",
+    "node-fetch": "^2.6.1",
+    "nunjucks": "^3.2.3",
+    "puppeteer-core": "^7.0.0"
   }
 }

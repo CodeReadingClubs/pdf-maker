@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer')
+const chromium = require('chrome-aws-lambda')
 const nunjucks = require('nunjucks')
 const fetch = require('node-fetch')
 
@@ -35,8 +35,21 @@ async function fetchCode({ owner, repo, commitSha, path }) {
 // creates a buffer containing a pdf file from the input html string (content)
 // using Puppeteer
 async function pdfBufferFromHtml(content) {
+  const headless = !process.env.NETLIFY_DEV
+  // Netlify probably greps function source code for `require(...)`
+  // so this hack is here so that it doesn't complain about puppeteer.
+  const puppeteer = headless ? chromium.puppeteer : require('puppet' + 'eer')
+
+  // this loads Roboto Mono into the headless Chromium because it doesn't come
+  // with any fonts other than Open Sans.
+  await chromium.font(
+    'https://rawcdn.githack.com/googlefonts/RobotoMono/8f651634e746da6df6c2c0be73255721d24f2372/fonts/ttf/RobotoMono-Regular.ttf',
+  )
   const browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    executablePath: headless ? await chromium.executablePath : undefined,
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    headless: headless || undefined,
   })
   const page = await browser.newPage()
   await page.setContent(content)
