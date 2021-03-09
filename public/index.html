@@ -49,6 +49,7 @@
       <p class="error" id="url-format-error" hidden>
         This url is poorly formatted
       </p>
+      <p class="info" id="info" hidden>Generating your PDF...</p>
       <p class="error" id="internal-error" hidden>Something went wrong</p>
     </main>
     <script>
@@ -56,6 +57,7 @@
       const input = document.getElementById('input')
       const urlFormatError = document.getElementById('url-format-error')
       const internalError = document.getElementById('internal-error')
+      const info = document.getElementById('info')
 
       function download(blob, filename) {
         const a = document.createElement('a')
@@ -77,8 +79,11 @@
           urlFormatError.hidden = false
         } else {
           urlFormatError.hidden = true
+          info.hidden = false
+
           fetch(`/.netlify/functions/make-pdf?path=${url}`)
             .then((response) => {
+              info.hidden = true
               if (!response.ok) {
                 throw new Error(`nah`)
               }
@@ -87,6 +92,7 @@
             .then((response) => response.blob())
             .then((blob) => download(blob, 'code.pdf'))
             .catch((err) => {
+              info.hidden = true
               internalError.hidden = false
             })
         }
