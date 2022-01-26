@@ -1,3 +1,9 @@
+[[redirects]]
+  from = "/*"
+  to = "https://pdf.codereading.club/:splat"
+  status = 301
+  force = true
+
 [build]
   publish = "public"
   functions = "functions"
