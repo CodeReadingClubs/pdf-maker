@@ -1,5 +1,5 @@
 [[redirects]]
-  from = "/*"
+  from = "https://pdf.code-reading.org/*"
   to = "https://pdf.codereading.club/:splat"
   status = 301
   force = true
