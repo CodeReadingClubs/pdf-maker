@@ -1,7 +1,7 @@
 # PDF Maker
 
 A tool to create PDFs from code on github.com for
-[Code Reading Clubs](https://code-reading.org/).
+[Code Reading Clubs](https://codereading.club/).
 
 ## How it's made
 
