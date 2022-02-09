@@ -7,13 +7,24 @@
     <title>PDF Maker</title>
     <style>
       body {
+        margin: 0;
+        padding: 5rem 0 2rem;
+        min-height: calc(100vh - 7rem);
         font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
 
       main {
         width: 90%;
         max-width: 40rem;
-        margin: 5rem auto 0;
+        flex-grow: 1;
+      }
+
+      footer {
+        width: 90%;
+        max-width: 40rem;
       }
 
       .error {
@@ -52,6 +63,14 @@
       <p class="info" id="info" hidden>Generating your PDF...</p>
       <p class="error" id="internal-error" hidden>Something went wrong</p>
     </main>
+    <footer>
+      <p>
+        This site is powered by <a href="https://netlify.com">Netlify</a>. Its
+        source is available on
+        <a href="https://github.com/CodeReadingClubs/pdf-maker">GitHub</a>. Pull
+        requests and issues always welcome!
+      </p>
+    </footer>
     <script>
       const form = document.getElementById('form')
       const input = document.getElementById('input')
